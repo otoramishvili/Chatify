@@ -2,11 +2,14 @@
 
 A full-stack real-time chat application built with the MERN stack, featuring secure authentication, live messaging, and a modern UI.
 
-🚀 Live Demo
+🚀 Live version
 
-Coming soon... (Add your deployed link here)
+(https://chatify-4nrp.onrender.com/login)
 
 📸 Preview
+
+![Login screen page](<Screenshot 2026-03-22 222807.png>)
+![Dashboard screen](<Screenshot 2026-03-22 222827.png>)
 
 🧠 Overview
 
