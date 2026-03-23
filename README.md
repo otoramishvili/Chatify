@@ -42,6 +42,7 @@ Cloudinary
 🔐 Authentication & Authorization
 Secure login & registration using JWT
 Password hashing with bcrypt
+Code verification using nodemailer
 
 💬 Realtime Messaging
 Instant chat using Socket.io
@@ -69,3 +70,6 @@ CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 
 NODE_ENV=
+
+EMAIL_USER=
+EMAIL_PASS=

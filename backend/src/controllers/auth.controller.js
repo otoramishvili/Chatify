@@ -2,56 +2,59 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
+import { transporter } from "../lib/nodemailer.js";
+import { generateOTP } from "../utils/otp.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
+
   try {
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
     }
 
-    const user = await User.findOne({ email });
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    if (user) return res.status(400).json({ message: "Email already exists" });
+    const otp = generateOTP();
+    const hashedOtp = await bcrypt.hash(otp, 10);
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     const newUser = new User({
       fullName,
       email,
       password: hashedPassword,
+      otp: hashedOtp,
+      otpExpires,
     });
 
-    if (newUser) {
-      // generate jwt token here
-      generateToken(newUser._id, res);
-      await newUser.save();
+    await newUser.save();
 
-      res.status(201).json({
-        _id: newUser._id,
-        fullName: newUser.fullName,
-        email: newUser.email,
-        profilePic: newUser.profilePic,
-      });
-    } else {
-      res.status(400).json({ message: "Invalid user data" });
-    }
+    await transporter.sendMail({
+      from: `Chatify`,
+      to: email,
+      subject: "Your verification Code",
+      html: `<h2>Your code is: ${otp}</h2><p>Expires in 10 minutes</p>`,
+    });
+
+    res.status(201).json({ message: "OTP sent to email" });
+
   } catch (error) {
-    console.log("Error in signup controller", error.message);
+    console.log("Signup error:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -61,16 +64,23 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    generateToken(user._id, res);
+    const otp = generateOTP();
 
-    res.status(200).json({
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      profilePic: user.profilePic,
+    user.otp = await bcrypt.hash(otp, 10);
+    user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
+    await user.save();
+
+    await transporter.sendMail({
+      from: `"Chat App" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Login OTP",
+      html: `<h2>Your OTP: ${otp}</h2><p>Expires in 10 minutes</p>`,
     });
+
+    res.status(200).json({ message: "OTP sent" });
+
   } catch (error) {
-    console.log("Error in login controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -81,6 +91,42 @@ export const logout = (req, res) => {
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     console.log("Error in logout controller", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const verifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !user.otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    const isOtpValid = await bcrypt.compare(otp, user.otp);
+    if (!isOtpValid) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (user.otpExpires < new Date()) {
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    user.otp = null;
+    user.otpExpires = null;
+
+    await user.save();
+
+    generateToken(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+    });
+
+  } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

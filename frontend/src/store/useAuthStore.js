@@ -11,6 +11,7 @@ export const useAuthStore = create((set, get) => ({
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: true,
+  isVerifyingCode: false,
   onlineUsers: [],
   socket: null,
 
@@ -31,12 +32,12 @@ export const useAuthStore = create((set, get) => ({
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      const res = await axiosInstance.post("/auth/signup", data);
-      set({ authUser: res.data });
-      toast.success("Account created successfully");
-      get().connectSocket();
+      await axiosInstance.post("/auth/signup", data);
+      toast.success("Account created successfully & Code was sent to your email");
+      return true; 
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || error.message);
+      return false;
     } finally {
       set({ isSigningUp: false });
     }
@@ -45,13 +46,12 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/auth/login", data);
-      set({ authUser: res.data });
-      toast.success("Logged in successfully");
-
-      get().connectSocket();
+      await axiosInstance.post("/auth/login", data);
+      toast.success("Send code to email");
+      return true;
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || error.message);
+      return false;
     } finally {
       set({ isLoggingIn: false });
     }
@@ -65,6 +65,23 @@ export const useAuthStore = create((set, get) => ({
       get().disconnectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
+    }
+  },
+
+  verifyCode: async (data) => {
+    set({ isVerifyingCode: true });
+    try {
+      const res = await axiosInstance.post("/auth/verify-code", data);
+      set({ authUser: res.data });
+      toast.success("Verification successful");
+
+      get().connectSocket();
+      return true;
+    } catch (error) {
+      toast.error(error.response.data.message);
+      return false;
+    } finally {
+      set({ isVerifyingCode: false });
     }
   },
 
