@@ -2,7 +2,7 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
-import { transporter } from "../lib/nodemailer.js";
+import { resend } from "../lib/resend.js";
 import { generateOTP } from "../utils/otp.js";
 
 export const signup = async (req, res) => {
@@ -35,12 +35,22 @@ export const signup = async (req, res) => {
 
     await newUser.save();
 
-    await transporter.sendMail({
-      from: `Chatify`,
+    const { data, error } = await resend.emails.send({
+      from: `Chatify <onboarding@resend.dev>`,
       to: email,
       subject: "Your verification Code",
       html: `<h2>Your code is: ${otp}</h2><p>Expires in 10 minutes</p>`,
     });
+
+    if (error) {
+      console.error("Resend error:", error);
+
+      newUser.otp = null;
+      newUser.otpExpires = null;
+      await newUser.save();
+
+      return res.status(500).json({ message: "Email failed" });
+    } 
 
     res.status(201).json({ message: "OTP sent to email" });
 
@@ -71,12 +81,22 @@ export const login = async (req, res) => {
 
     await user.save();
 
-    await transporter.sendMail({
-      from: `"Chat App" <${process.env.EMAIL_USER}>`,
+    const { data, error } = await resend.emails.send({
+      from: `Chatify <onboarding@resend.dev>`,
       to: email,
       subject: "Login OTP",
       html: `<h2>Your OTP: ${otp}</h2><p>Expires in 10 minutes</p>`,
     });
+
+    if (error) {
+      console.error("Resend error:", error);
+
+      user.otp = null;
+      user.otpExpires = null;
+      await user.save();
+
+      return res.status(500).json({ message: "Email failed" });
+    }
 
     res.status(200).json({ message: "OTP sent" });
 
