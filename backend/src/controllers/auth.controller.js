@@ -13,16 +13,19 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const otp = generateOTP();
+    const otp = generateOTP(); 
+    
     const hashedOtp = await bcrypt.hash(otp, 10);
-
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     const newUser = new User({
@@ -30,32 +33,36 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
       otp: hashedOtp,
-      otpExpires,
+      otpExpires
     });
 
     await newUser.save();
 
     const { data, error } = await resend.emails.send({
-      from: `Chatify <onboarding@resend.dev>`,
+      from: "Chatify <onboarding@resend.dev>",
       to: email,
-      subject: "Your verification Code",
-      html: `<h2>Your code is: ${otp}</h2><p>Expires in 10 minutes</p>`,
+      subject: "Verify your Chatify account",
+      html: `
+        <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee">
+          <h2>Welcome to Chatify!</h2>
+          <p>Your verification code is:</p>
+          <h1 style="color: #4F46E5; letter-spacing: 5px;">${otp}</h1>
+          <p>This code expires in 10 minutes.</p>
+        </div>
+      `,
     });
 
     if (error) {
-      console.error("Resend error:", error);
+      await User.deleteOne({ _id: newUser._id });
+      return res.status(500).json({ message: "Failed to send verification email" });
+    }
 
-      newUser.otp = null;
-      newUser.otpExpires = null;
-      await newUser.save();
+    res.status(201).json({ 
+      message: "Registration successful. Please check your email for the OTP." 
+    });
 
-      return res.status(500).json({ message: "Email failed" });
-    } 
-
-    res.status(201).json({ message: "OTP sent to email" });
-
-  } catch (error) {
-    console.log("Signup error:", error.message);
+  } catch (err) {
+    console.error("Signup error:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
