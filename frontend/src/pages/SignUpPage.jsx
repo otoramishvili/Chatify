@@ -34,10 +34,7 @@ const SignUpPage = () => {
     if (!success) return;
 
     try {
-      const success = await signup(formData);
-      if(success) {
-        navigate("/verify");
-      }
+      await signup(formData);
     } catch (error) {
       console.log(error);
     }

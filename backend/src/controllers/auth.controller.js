@@ -2,8 +2,8 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
-import { resend } from "../lib/resend.js";
-import { generateOTP } from "../utils/otp.js";
+//import { resend } from "../lib/resend.js";
+//import { generateOTP } from "../utils/otp.js";
 
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -23,22 +23,22 @@ export const signup = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const otp = generateOTP(); 
+    //const otp = generateOTP(); 
     
-    const hashedOtp = await bcrypt.hash(otp, 10);
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    //const hashedOtp = await bcrypt.hash(otp, 10);
+    //const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     const newUser = new User({
       fullName,
       email,
       password: hashedPassword,
-      otp: hashedOtp,
-      otpExpires
+      //otp: hashedOtp,
+      //otpExpires
     });
 
     await newUser.save();
 
-    const { data, error } = await resend.emails.send({
+    /* const { data, error } = await resend.emails.send({
       from: "Chatify <onboarding@resend.dev>",
       to: email,
       subject: "Verify your Chatify account",
@@ -50,19 +50,21 @@ export const signup = async (req, res) => {
           <p>This code expires in 10 minutes.</p>
         </div>
       `,
-    });
+    }); 
 
     if (error) {
       await User.deleteOne({ _id: newUser._id });
       return res.status(500).json({ message: "Failed to send verification email" });
-    }
+    } */
+
+    generateToken(newUser._id, res);
 
     res.status(201).json({ 
-      message: "Registration successful. Please check your email for the OTP." 
+      message: "Signup successful" 
     });
 
   } catch (err) {
-    console.error("Signup error:", err);
+    //console.error("Signup error:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -81,14 +83,14 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const otp = generateOTP();
+    //const otp = generateOTP();
 
-    user.otp = await bcrypt.hash(otp, 10);
-    user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+    //user.otp = await bcrypt.hash(otp, 10);
+    //user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
     await user.save();
 
-    const { data, error } = await resend.emails.send({
+    /*const { data, error } = await resend.emails.send({
       from: `Chatify <onboarding@resend.dev>`,
       to: email,
       subject: "Login OTP",
@@ -103,9 +105,11 @@ export const login = async (req, res) => {
       await user.save();
 
       return res.status(500).json({ message: "Email failed" });
-    }
+    } */
 
-    res.status(200).json({ message: "OTP sent" });
+    generateToken(user._id, res);
+
+    res.status(200).json({ message: "Login successfull" });
 
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });

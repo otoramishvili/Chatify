@@ -17,10 +17,7 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const success = await login(formData);
-      if(success) {
-        navigate("/verify");
-      } 
+      await login(formData);
     } catch (error) {
       console.log(error);
     }

@@ -32,12 +32,12 @@ export const useAuthStore = create((set, get) => ({
   signup: async (data) => {
     set({ isSigningUp: true });
     try {
-      await axiosInstance.post("/auth/signup", data);
-      toast.success("Account created successfully & Code was sent to your email");
-      return true; 
+      const res = await axiosInstance.post("/auth/signup", data);
+      toast.success("Account created successfully");
+      set({ authUser: res.data });
+      await get().checkAuth();
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
-      return false;
     } finally {
       set({ isSigningUp: false });
     }
@@ -46,12 +46,12 @@ export const useAuthStore = create((set, get) => ({
   login: async (data) => {
     set({ isLoggingIn: true });
     try {
-      await axiosInstance.post("/auth/login", data);
-      toast.success("Send code to email");
-      return true;
+      const res = await axiosInstance.post("/auth/login", data);
+      toast.success("Logged in successfully");
+      set({ authUser: res.data });
+      await get().checkAuth();
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);
-      return false;
     } finally {
       set({ isLoggingIn: false });
     }
@@ -68,7 +68,7 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  verifyCode: async (data) => {
+  /*verifyCode: async (data) => {
     set({ isVerifyingCode: true });
     try {
       const res = await axiosInstance.post("/auth/verify-code", data);
@@ -83,7 +83,7 @@ export const useAuthStore = create((set, get) => ({
     } finally {
       set({ isVerifyingCode: false });
     }
-  },
+  },*/
 
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
