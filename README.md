@@ -62,6 +62,8 @@ Cloudinary integration
 Backend & frontend error handling
 Clean API responses
 
+Searching users functionality
+
 MONGODB_URI=
 PORT=
 JWT_SECRET=
