@@ -26,6 +26,7 @@ Axios
 🌐 Backend
 Node.js
 Express.js
+TypeScript
 MongoDB + Mongoose
 🔌 Realtime
 Socket.io

@@ -1,0 +1,1 @@
+{"version":3,"file":"rate.limit.middleware.d.ts","sourceRoot":"","sources":["../../src/middleware/rate.limit.middleware.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,YAAY,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAG/D,eAAO,MAAM,mBAAmB,GAAU,KAAK,OAAO,EAAE,KAAK,QAAQ,EAAE,MAAM,YAAY,4DAqBxF,CAAC"}
