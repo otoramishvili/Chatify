@@ -22,6 +22,24 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
+  searchUsers: async () => {
+    set({ isUsersLoading: true });
+
+   try {
+    const url = query
+      ? `/users/search?query=${query}`
+      : "/messages/users";
+
+    const res = await axiosInstance.get(url);
+
+    set({ users: res.data });
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Search failed");
+    } finally {
+      set({ isUsersLoading: false });
+    }
+  },
+
   getMessages: async (userId) => {
     set({ isMessagesLoading: true });
     try {

@@ -16,6 +16,29 @@ export const getUsersForSidebar = async (req: Request, res: Response) => {
   }
 };
 
+export const searchUsers = async (req: Request, res: Response) => {
+  try {
+    const loggedInUserId = req.user._id;
+    const query = req.query.query as string;
+
+    if (!query) {
+      return res.status(400).json({ error: "Query is required" });
+    }
+
+    const users = await User.find({
+      _id: { $ne: loggedInUserId },
+      fullName: {
+        $regex: query,
+        $options: "i",
+      },
+    }).select("-password").limit(20);
+
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 export const getMessages = async (req: Request, res: Response) => {
   try {
     const { id: userToChatId } = req.params;
