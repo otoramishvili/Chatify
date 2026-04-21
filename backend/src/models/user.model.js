@@ -19,9 +19,7 @@ const userSchema = new mongoose.Schema(
     profilePic: {
       type: String,
       default: "",
-    },
-    //otp: String,
-    //otpExpires: Date
+    }
   },
   { timestamps: true }
 );
