@@ -6,6 +6,7 @@ interface UserType {
   fullName: string;
   password: string;
   profilePic?: string;
+  role: "user" | "admin";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,6 +31,11 @@ const userSchema = new Schema<UserType>(
     profilePic: {
       type: String,
       default: "",
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
   },
   { timestamps: true }

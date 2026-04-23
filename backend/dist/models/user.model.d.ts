@@ -5,6 +5,7 @@ interface UserType {
     fullName: string;
     password: string;
     profilePic?: string;
+    role: "user" | "admin";
     createdAt: Date;
     updatedAt: Date;
 }

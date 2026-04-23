@@ -31,7 +31,7 @@ export const signup = async (req: Request, res: Response) => {
 
     await newUser.save();
 
-    generateToken(newUser.id, res);
+    generateToken(newUser.id, newUser.role, res);
 
     res.status(201).json({ 
       message: "Signup successful" 
@@ -58,7 +58,7 @@ export const login = async (req: Request, res: Response) => {
 
     await user.save();
 
-    generateToken(user.id, res);
+    generateToken(user.id, user.role, res);
 
     res.status(200).json({ message: "Login successfull" });
 

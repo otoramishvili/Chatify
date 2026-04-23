@@ -7,10 +7,12 @@ const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
+  isAdmin: false,
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: true,
+  isCheckingAdmin: true,
   isVerifyingCode: false,
   onlineUsers: [],
   socket: null,
@@ -19,13 +21,31 @@ export const useAuthStore = create((set, get) => ({
     try {
       const res = await axiosInstance.get("/auth/check");
 
-      set({ authUser: res.data });
+      set({
+        authUser: res.data,
+        isAdmin: res.data.role === "admin"
+      });
+
       get().connectSocket();
-    } catch (error) {
-      console.log("Error in checkAuth:", error);
-      set({ authUser: null });
+    } catch {
+      set({ authUser: null, isAdmin: false });
     } finally {
       set({ isCheckingAuth: false });
+    }
+  },
+
+  checkAdmin: async () => {
+    try {
+      set({ isCheckingAdmin: true });
+
+      const res = await axiosInstance.get("/auth/admin");
+
+      set({ isAdmin: res.data.role === "admin" });
+    } catch (error) {
+      console.log("Error in admin", error);
+      set({ isAdmin: false });
+    } finally {
+      set({ isCheckingAdmin: false });
     }
   },
 
@@ -60,30 +80,13 @@ export const useAuthStore = create((set, get) => ({
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
-      set({ authUser: null });
+      set({ authUser: null, isAdmin: null });
       toast.success("Logged out successfully");
       get().disconnectSocket();
     } catch (error) {
       toast.error(error.response.data.message);
     }
   },
-
-  /*verifyCode: async (data) => {
-    set({ isVerifyingCode: true });
-    try {
-      const res = await axiosInstance.post("/auth/verify-code", data);
-      set({ authUser: res.data });
-      toast.success("Verification successful");
-
-      get().connectSocket();
-      return true;
-    } catch (error) {
-      toast.error(error.response.data.message);
-      return false;
-    } finally {
-      set({ isVerifyingCode: false });
-    }
-  },*/
 
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });

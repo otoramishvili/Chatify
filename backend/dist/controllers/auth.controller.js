@@ -22,7 +22,7 @@ export const signup = async (req, res) => {
             password: hashedPassword
         });
         await newUser.save();
-        generateToken(newUser.id, res);
+        generateToken(newUser.id, newUser.role, res);
         res.status(201).json({
             message: "Signup successful"
         });
@@ -43,7 +43,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
         await user.save();
-        generateToken(user.id, res);
+        generateToken(user.id, user.role, res);
         res.status(200).json({ message: "Login successfull" });
     }
     catch (error) {

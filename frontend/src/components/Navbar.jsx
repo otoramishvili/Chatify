@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { LogOut, MessageSquare, Settings, User } from "lucide-react";
 
 const Navbar = () => {
-  const { logout, authUser } = useAuthStore();
+  const { logout, authUser, isAdmin } = useAuthStore();
 
   return (
     <header
@@ -22,6 +22,15 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {isAdmin && (
+              <>
+                <Link to={"/admin"} className={`btn btn-sm gap-2`}>
+                  <User className="size-5" />
+                  <span className="hidden sm:inline">Admin panel</span>
+                </Link>
+              </>
+            )}
+
             {authUser && (
               <>
                 <Link to={"/profile"} className={`btn btn-sm gap-2`}>

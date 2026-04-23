@@ -13,71 +13,54 @@ A full-stack real-time chat application built with the MERN stack, featuring sec
 
 🧠 Overview
 
-This project is a real-time messaging app that demonstrates modern full-stack development practices, including authentication, WebSocket communication, and scalable state management.
+This project is a real-time messaging platform demonstrating modern full-stack development concepts, including:
+
+Authentication & authorization WebSocket-based communication Scalable state management Media uploads and real-time updates
 
 ⚙️ Tech Stack
 
-🖥️ Frontend
-React.js
-Zustand (State Management)
-Tailwind CSS + DaisyUI
-Axios
+🖥️ Frontend React.js Zustand (State Management) Tailwind CSS + DaisyUI Axios
 
-🌐 Backend
-Node.js
-Express.js
-TypeScript
-MongoDB + Mongoose
-🔌 Realtime
-Socket.io
+🌐 Backend Node.js Express.js TypeScript MongoDB + Mongoose Socket.io
 
-🔐 Authentication
-JSON Web Tokens (JWT)
-bcrypt (Password hashing)
+🔐 Authentication JSON Web Tokens (JWT) bcrypt (Password hashing)
 
-☁️ Media Handling
-Cloudinary
+☁️ Media Handling Cloudinary
+
+Rate Limiting Upstash
 
 ✨ Features
 
-🔐 Authentication & Authorization
-Secure login & registration using JWT
-Password hashing with bcrypt
-Code verification using Resend
+🔐 Authentication & Authorization Secure JWT base authentication Password hashing with bcrypt
 
-💬 Realtime Messaging
-Instant chat using Socket.io
-Typing & message delivery flow ready
+💬 Realtime Messaging Instant chat using Socket.io Live message updates Typing-ready architecture
 
-🟢 Online User Status
-Track active users in real time
+🟢 Online User Status Track active users in real time
 
-🧠 Global State Management
-Lightweight and scalable with Zustand
+🧠 Global State Management Lightweight and scalable with Zustand
 
-🖼️ Image Upload Support
-Cloudinary integration
+🖼️ Image Upload Support Cloudinary integration
 
-🐞 Robust Error Handling
-Backend & frontend error handling
-Clean API responses
+👤 User System User search functionality Profile-based chat system
 
-Searching users functionality
+🐞 Robust Error Handling Backend & frontend error handling Clean API responses
+
+🛡️ Error Handling Centralized backend error handling Clean API responses Frontend error management
 
 MONGODB_URI=
+
 PORT=
+
 JWT_SECRET=
 
 CLOUDINARY_CLOUD_NAME=
+
 CLOUDINARY_API_KEY=
+
 CLOUDINARY_API_SECRET=
 
 NODE_ENV=
 
-EMAIL_USER=
-EMAIL_PASS=
-
-RESEND_API_KEY=
-
 UPSTASH_REDIS_REST_URL=
+
 UPSTASH_REDIS_REST_TOKEN=
