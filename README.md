@@ -1,10 +1,17 @@
-💬 Realtime Chat Application
+💬 Chatify — Real-Time Chat Application
 
-A full-stack real-time chat application built with the MERN stack, featuring secure authentication, live messaging, and a modern UI.
+A full-stack real-time chat platform built with the MERN stack, featuring secure authentication, live messaging, and a modern, responsive UI.
 
-🚀 Live version
+👨‍💻 Author
 
-(https://chatify-4nrp.onrender.com/login)
+Otar Ramishvili
+
+🔗 GitHub: https://github.com/otoramishvili
+🔗 LinkedIn: https://www.linkedin.com/in/oto-ramishvili-581b193a5
+
+🚀 Live Demo
+
+🔗 https://chatify-4nrp.onrender.com/login
 
 📸 Preview
 
@@ -13,58 +20,117 @@ A full-stack real-time chat application built with the MERN stack, featuring sec
 
 🧠 Overview
 
-This project is a real-time messaging platform demonstrating modern full-stack development concepts, including:
+Chatify is a scalable real-time messaging platform designed to demonstrate modern backend and frontend architecture.
 
-Authentication & authorization WebSocket-based communication Scalable state management Media uploads and real-time updates
+It includes:
+
+Secure authentication & authorization
+WebSocket-based real-time communication
+Efficient global state management
+Media uploads with cloud storage
+Clean and structured API design
 
 ⚙️ Tech Stack
 
-🖥️ Frontend React.js Zustand (State Management) Tailwind CSS + DaisyUI Axios
+🖥️ Frontend
 
-🌐 Backend Node.js Express.js TypeScript MongoDB + Mongoose Socket.io
+React.js
+Zustand (state management)
+Tailwind CSS + DaisyUI
+Axios
 
-🔐 Authentication JSON Web Tokens (JWT) bcrypt (Password hashing)
+🌐 Backend
 
-☁️ Media Handling Cloudinary
+Node.js
+Express.js
+TypeScript
+MongoDB + Mongoose
+Socket.IO
 
-Rate Limiting Upstash
+🔐 Authentication
+
+JSON Web Tokens (JWT)
+bcrypt (password hashing)
+
+☁️ Services
+
+Cloudinary (media storage)
+Upstash (rate limiting & Redis)
 
 ✨ Features
 
-🔐 Authentication & Authorization Secure JWT base authentication Password hashing with bcrypt
+🔐 Authentication & Authorization
 
-💬 Realtime Messaging Instant chat using Socket.io Live message updates Typing-ready architecture
+Secure JWT-based authentication
+HTTP-only cookies for improved security
+Password hashing with bcrypt
 
-🟢 Online User Status Track active users in real time
+💬 Real-Time Messaging
 
-🧠 Global State Management Lightweight and scalable with Zustand
+Instant messaging powered by Socket.IO
+Live updates without refresh
+Scalable real-time architecture
 
-🖼️ Image Upload Support Cloudinary integration
+🟢 Online Presence
 
-👤 User System User search functionality Profile-based chat system
+Track active users in real time
+Dynamic user status updates
 
-🐞 Robust Error Handling Backend & frontend error handling Clean API responses
+🧠 State Management
 
-🛡️ Error Handling Centralized backend error handling Clean API responses Frontend error management
+Lightweight global state using Zustand
+Optimized client-side data flow
+
+🖼️ Media Uploads
+
+Image upload support via Cloudinary
+Fast and reliable media delivery
+
+👤 User System
+
+User search functionality
+Profile-based conversations
+
+🛡️ Error Handling
+
+Centralized backend error handling
+Consistent API responses
+Frontend error management
 
 MONGODB_URI=
-
 PORT=
-
 JWT_SECRET=
 
 CLOUDINARY_CLOUD_NAME=
-
 CLOUDINARY_API_KEY=
-
 CLOUDINARY_API_SECRET=
 
 NODE_ENV=
 
 UPSTASH_REDIS_REST_URL=
-
 UPSTASH_REDIS_REST_TOKEN=
 
 STREAM_API_KEY=
-
 STREAM_API_SECRET=
+
+Run the app
+
+# backend
+npm run dev
+
+# frontend
+npm run dev
+
+📐 Architecture Highlights
+
+RESTful API design with clear separation of concerns
+WebSocket integration for real-time communication
+Secure authentication using HTTP-only cookies
+Scalable backend structure with middleware & controllers
+
+📌 Future Improvements
+
+📞 Video/voice calling
+📨 Message read receipts
+📱 Mobile optimization
+🔔 Notifications system
