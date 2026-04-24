@@ -1,4 +1,6 @@
 import React from "react";
+import AdminSidebar from "../components/AdminSidebar";
+import AdminContent from "../components/AdminContent";
 
 const AdminPage = () => {
   return (
@@ -8,11 +10,11 @@ const AdminPage = () => {
           
           <div className="flex h-full rounded-lg overflow-hidden">
             <div className="hidden md:block md:w-48 lg:w-64 border-r border-base-300 p-4">
-              Sidebar
+              <AdminSidebar />
             </div>
 
             <div className="flex-1 p-4">
-              Content
+              <AdminContent />
             </div>
           </div>
 
