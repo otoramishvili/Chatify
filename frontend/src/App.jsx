@@ -17,20 +17,9 @@ import { Toaster } from "react-hot-toast";
 const App = () => {
   const { authUser, checkAuth, checkAdmin, isAdmin, isCheckingAuth, isCheckingAdmin, onlineUsers } = useAuthStore();
 
-  console.log({ onlineUsers });
-
   useEffect(() => {
     checkAuth();
   }, []);
-
-  console.log({ authUser });
-
-  if (isCheckingAuth)
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
-      </div>
-    );
 
   return (
     <div data-theme="night">
